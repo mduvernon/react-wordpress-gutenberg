@@ -5,10 +5,24 @@
 @import "@wordpress/base-styles/animations";
 @import "@wordpress/base-styles/z-index";
 
-@import "./reset";
-@import "./editor-styles";
+:root {
+	@include reset;
+}
 
-.playground {
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-family: $default-font;
+	font-size: $default-font-size;
+}
+
+a,
+div {
+	outline: 0;
+}
+
+.react-wordpress-gutemberg {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -24,122 +38,122 @@
 	iframe {
 		width: 100%;
 	}
-}
 
-.playground__content {
-	// Reference element for the block popover position.
-	position: relative;
-}
-
-.playground__sidebar {
-	width: $sidebar-width;
-	border-left: $border-width solid $gray-300;
-	height: auto;
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
-	width: 340px;
-
-	// Temporarily disable the sidebar on mobile
-	display: none;
-	@include break-small() {
-		display: block;
+	.playground__content {
+		// Reference element for the block popover position.
+		position: relative;
 	}
-}
 
-/**
- * Animations
- */
+	.playground__sidebar {
+		width: $sidebar-width;
+		border-left: $border-width solid $gray-300;
+		height: auto;
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+		width: 340px;
 
-// These keyframes should not be part of the _animations.scss mixins file.
-// Because keyframe animations can't be defined as mixins properly, they are duplicated.
-// Since hey are intended only for the editor, we add them here instead.
-@keyframes edit-post__fade-in-animation {
-	from {
-		opacity: 0;
+		// Temporarily disable the sidebar on mobile
+		display: none;
+		@include break-small() {
+			display: block;
+		}
 	}
-	to {
-		opacity: 1;
+
+	/**
+	* Animations
+	*/
+
+	// These keyframes should not be part of the _animations.scss mixins file.
+	// Because keyframe animations can't be defined as mixins properly, they are duplicated.
+	// Since hey are intended only for the editor, we add them here instead.
+	@keyframes edit-post__fade-in-animation {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
-}
 
-.editor-editor-interface .interface-interface-skeleton__content {
-	isolation: isolate;
-}
+	.editor-editor-interface .interface-interface-skeleton__content {
+		isolation: isolate;
+	}
 
-@media (min-width: 782px) {
+	@media (min-width: 782px) {
+		.interface-interface-skeleton__content {
+			z-index: auto;
+		}
+	}
+
 	.interface-interface-skeleton__content {
-		z-index: auto;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		overflow: auto;
+		z-index: 20;
 	}
-}
 
-.interface-interface-skeleton__content {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	overflow: auto;
-	z-index: 20;
-}
-
-@media (min-width: 782px) {
-	.has-footer .interface-interface-skeleton__body {
-		padding-bottom: 25px;
+	@media (min-width: 782px) {
+		.has-footer .interface-interface-skeleton__body {
+			padding-bottom: 25px;
+		}
 	}
-}
 
-.interface-interface-skeleton__body {
-	display: flex;
-	flex-grow: 1;
-	overflow: auto;
-	overscroll-behavior-y: none;
-	position: relative;
-}
+	.interface-interface-skeleton__body {
+		display: flex;
+		flex-grow: 1;
+		overflow: auto;
+		overscroll-behavior-y: none;
+		position: relative;
+	}
 
-@media (min-width: 782px) {
+	@media (min-width: 782px) {
+		.interface-interface-skeleton__sidebar {
+			box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.133);
+			outline: 1px solid #0000;
+		}
+	}
+
 	.interface-interface-skeleton__sidebar {
-		box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.133);
-		outline: 1px solid #0000;
+		border-top: 1px solid #e0e0e0;
+		overflow: hidden;
 	}
-}
 
-.interface-interface-skeleton__sidebar {
-	border-top: 1px solid #e0e0e0;
-	overflow: hidden;
-}
+	@media (min-width: 782px) {
+		.interface-interface-skeleton__secondary-sidebar,
+		.interface-interface-skeleton__sidebar {
+			position: relative !important;
+		}
+	}
 
-@media (min-width: 782px) {
 	.interface-interface-skeleton__secondary-sidebar,
 	.interface-interface-skeleton__sidebar {
-		position: relative !important;
+		background: #fff;
+		bottom: 0;
+		color: #1e1e1e;
+		flex-shrink: 0;
+		left: 0;
+		position: absolute;
+		top: 0;
+		z-index: 100000;
 	}
-}
 
-.interface-interface-skeleton__secondary-sidebar,
-.interface-interface-skeleton__sidebar {
-	background: #fff;
-	bottom: 0;
-	color: #1e1e1e;
-	flex-shrink: 0;
-	left: 0;
-	position: absolute;
-	top: 0;
-	z-index: 100000;
-}
+	.editor-with-undo-redo {
+		border: 1px solid #ddd;
+	}
 
-.editor-with-undo-redo {
-	border: 1px solid #ddd;
-}
+	.editor-with-undo-redo__toolbar {
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid #ddd;
+		height: 46px;
+	}
 
-.editor-with-undo-redo__toolbar {
-	display: flex;
-	align-items: center;
-	border-bottom: 1px solid #ddd;
-	height: 46px;
-}
+	.editor-undo-redo__toolbar {
+		border: 1px solid #e0e0e0;
 
-.editor-undo-redo__toolbar {
-	border: 1px solid #e0e0e0;
-
-	.components-accessible-toolbar.block-editor-block-contextual-toolbar {
-		border-bottom: none;
+		.components-accessible-toolbar.block-editor-block-contextual-toolbar {
+			border-bottom: none;
+		}
 	}
 }

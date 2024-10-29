@@ -1,16 +1,14 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { serialize, parse } from '@wordpress/blocks';
 import {
     BlockEditorProvider,
     BlockInspector,
-    BlockToolbar,
     BlockCanvas,
 } from "@wordpress/block-editor";
 import { BlockInstance } from "@wordpress/blocks";
 import { Button } from '@wordpress/components';
-import { Popover, SlotFillProvider } from "@wordpress/components";
+import { Popover } from "@wordpress/components";
 import { registerCoreBlocks } from "@wordpress/block-library";
-import { ShortcutProvider } from "@wordpress/keyboard-shortcuts";
 import { useStateWithHistory } from '@wordpress/compose';
 import { undo as undoIcon, redo as redoIcon } from '@wordpress/icons';
 import "@wordpress/format-library";
@@ -25,39 +23,57 @@ import "@wordpress/format-library/build-style/style.css";
 /**
  * Internal deps
  */
-import EDITOR_SETTINGS from "./editor-settings";
+import { EDITOR_SETTINGS } from "../../common/constants/editor-settings";
+import { editorStyles } from "../../common/constants/editor-styles";
+// Styles
 import "./styles.scss";
-import { editorStyles } from "./editor-styles";
 
-/**
- * tutorials 
- * @see https://github.com/WordPress/gutenberg/blob/6372ef77e99d4a2c962f031f434e1f0565618776/platform-docs/docs/basic-concepts/data.md
- * 
- * 
- * @returns 
- */
-const Editor: FC = () => {
+type OwnProps = {
+    className?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+};
+
+const WordpressGutembergEditor: FC<OwnProps> = ({
+    className = "",
+    value: inputValue,
+    onChange,
+}) => {
 
     const { value, setValue, hasUndo, hasRedo, undo, redo } = useStateWithHistory({ blocks: [] });
-    const [blocks, updateBlocks] = useState<BlockInstance<{ [k: string]: any; }>[]>([]);
 
     useEffect(() => {
         registerCoreBlocks();
     }, []);
 
+    useEffect(() => {
+        if (inputValue?.length > 0) {
+            setValue({ blocks: parse(inputValue) }, false);
+        }
+    }, [inputValue]);
+
+    const _handleEditorInput = (blocks: BlockInstance[]) => {
+        setValue({ blocks }, false);
+    };
+
+    const _handleEditorChange = (blocks: BlockInstance[]) => {
+        setValue({ blocks }, true);
+
+        const newValue = serialize(blocks);
+
+        if (newValue !== inputValue && typeof onChange === "function") {
+            onChange(newValue);
+        }
+    }
+
     return (
-        <div className="playground">
+        <div className={`react-wordpress-gutemberg playground ${className}`}>
             <div className="interface-interface-skeleton__body">
                 <BlockEditorProvider
                     settings={EDITOR_SETTINGS}
-                    value={value.blocks}
-                    selection={value.selection}
-                    onInput={(blocks, selection) =>
-                        setValue({ blocks, selection }, true)
-                    }
-                    onChange={(blocks, selection) =>
-                        setValue({ blocks, selection }, false)
-                    }
+                    value={(value as any).blocks}
+                    onChange={_handleEditorChange}
+                    onInput={_handleEditorInput}
                 >
                     <div className="playground__content editor-editor-interface interface-interface-skeleton__content">
                         <div className="editor-undo-redo__toolbar">
@@ -90,6 +106,6 @@ const Editor: FC = () => {
     );
 }
 
-export default Editor;
+export default WordpressGutembergEditor;
 
-export { Editor };
+export { WordpressGutembergEditor };

@@ -15,4 +15,4 @@ const EDITOR_SETTINGS = {
   }
 };
 
-export default EDITOR_SETTINGS;
+export { EDITOR_SETTINGS };
